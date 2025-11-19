@@ -240,12 +240,24 @@ See [docs/QUICKSTART.md](./docs/QUICKSTART.md) for a 5-minute setup guide.
    cd ..
    ```
 
-3. **Deploy to Rayls Devnet:**
+3. **Set up environment variables:**
    ```bash
-   # Set your private key in .env file
-   echo "PRIVATE_KEY=your_private_key_here" > .env
-   echo "RAYLS_RPC_URL=https://devnet-rpc.rayls.com" >> .env
+   # Copy the example file
+   cp .env.example .env
    
+   # Edit .env and add your private key (without 0x prefix)
+   # Get your private key from MetaMask: Account Details > Export Private Key
+   # WARNING: Never commit .env to git!
+   ```
+
+4. **Get testnet tokens:**
+   - See [docs/FAUCET.md](./docs/FAUCET.md) for detailed instructions
+   - Add Rayls Devnet to MetaMask (Chain ID: 123123)
+   - Request USDr tokens from the Rayls faucet
+   - You'll need ~20-50 USDr for deployment and testing
+
+5. **Deploy to Rayls Devnet:**
+   ```bash
    # Deploy contracts
    make deploy
    # Or manually: npx hardhat run scripts/deploy.mjs --network rayls_devnet
