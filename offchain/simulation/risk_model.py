@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HoneyVaiult Risk Simulation Layer
+Praxos Risk Simulation Layer
 Simulates risk profiles for ERC-3643 RWA tokens
 """
 

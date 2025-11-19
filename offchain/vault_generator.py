@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HoneyVaiult Vault Generator
+Praxos Vault Generator
 Orchestrates the full pipeline: simulation -> AI allocation -> vault deployment
 """
 
@@ -80,7 +80,7 @@ class VaultGenerator:
         Get vault configuration ready for smart contract deployment
         
         Returns:
-            Configuration dict compatible with HoneyVaultFactory.createVault()
+            Configuration dict compatible with PraxosFactory.createVault()
         """
         strategy = self.ai_engine.get_strategy_by_id(strategy_id)
         if not strategy:

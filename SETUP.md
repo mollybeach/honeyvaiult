@@ -1,4 +1,4 @@
-# HoneyVaiult Setup Guide
+# Praxos Setup Guide
 
 ## Prerequisites
 
@@ -145,18 +145,18 @@ python3 -m http.server 8000
 ## Project Structure
 
 ```
-honeyvaiult/
+praxos/
 ├── src/
 │   ├── interfaces/
 │   │   └── IERC3643.sol          # ERC-3643 RWA interface
 │   ├── mocks/
 │   │   └── MockERC3643.sol       # Mock RWA tokens for testing
-│   ├── HoneyVault.sol             # ERC-4626 vault implementation
-│   └── HoneyVaultFactory.sol     # Vault factory
+│   ├── Praxos.sol             # ERC-4626 vault implementation
+│   └── PraxosFactory.sol     # Vault factory
 ├── script/
 │   └── Deploy.s.sol              # Deployment script
 ├── src/test/
-│   └── HoneyVault.t.sol         # Tests
+│   └── Praxos.t.sol         # Tests
 ├── offchain/
 │   ├── simulation/
 │   │   └── risk_model.py         # Risk simulation layer

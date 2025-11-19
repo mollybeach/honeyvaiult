@@ -1,4 +1,4 @@
-// HoneyVaiult Frontend
+// Praxos Frontend
 // Connect to Rayls devnet and interact with vaults
 
 const RAYLS_DEVNET = {

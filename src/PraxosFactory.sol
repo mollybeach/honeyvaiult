@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {HoneyVault} from "./HoneyVault.sol";
+import {PraxosVault} from "./PraxosVault.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
- * @title HoneyVaultFactory
+ * @title PraxosFactory
  * @notice Factory contract for creating ERC-4626 vaults from AI-generated strategies
  * @dev This is the "Vault Generator" that deploys vaults based on allocation strategies
  */
-contract HoneyVaultFactory is Ownable {
+contract PraxosFactory is Ownable {
     struct VaultConfig {
         address baseAsset;
         string name;
@@ -35,7 +35,7 @@ contract HoneyVaultFactory is Ownable {
     constructor() Ownable(msg.sender) {}
 
     /**
-     * @notice Create a new HoneyVault with the given configuration
+     * @notice Create a new Praxos with the given configuration
      * @param config The vault configuration
      * @return vault The address of the newly created vault
      */
@@ -52,7 +52,7 @@ contract HoneyVaultFactory is Ownable {
         require(totalWeight == 10000, "Weights must sum to 10000");
         
         // Deploy new vault
-        HoneyVault newVault = new HoneyVault(
+        PraxosVault newVault = new PraxosVault(
             ERC20(config.baseAsset),
             config.name,
             config.symbol,

@@ -1,6 +1,6 @@
-# HoneyVaiult Quick Start Guide
+# Praxos Quick Start Guide
 
-Get up and running with HoneyVaiult in 5 minutes.
+Get up and running with Praxos in 5 minutes.
 
 ## Prerequisites Check
 

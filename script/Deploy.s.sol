@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {Script, console} from "forge-std/Script.sol";
-import {HoneyVaultFactory} from "../src/HoneyVaultFactory.sol";
+import {PraxosFactory} from "../src/PraxosFactory.sol";
 import {MockERC3643} from "../src/mocks/MockERC3643.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -22,11 +22,11 @@ contract DeployScript is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        console.log("Deploying HoneyVaiult to Rayls Devnet...");
+        console.log("Deploying Praxos to Rayls Devnet...");
         console.log("Deployer:", msg.sender);
 
         // Deploy factory
-        HoneyVaultFactory factory = new HoneyVaultFactory();
+        PraxosFactory factory = new PraxosFactory();
         console.log("Factory deployed at:", address(factory));
 
         // Deploy base asset
@@ -78,7 +78,7 @@ contract DeployScript is Script {
         weights[1] = 4000; // 40%
         weights[2] = 2000; // 20%
 
-        HoneyVaultFactory.VaultConfig memory config = HoneyVaultFactory.VaultConfig({
+        PraxosFactory.VaultConfig memory config = PraxosFactory.VaultConfig({
             baseAsset: address(usdc),
             name: "Balanced Diversified Vault",
             symbol: "BAL-VAULT",

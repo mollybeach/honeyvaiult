@@ -2,8 +2,8 @@
 pragma solidity ^0.8.24;
 
 import {Test, console} from "forge-std/Test.sol";
-import {HoneyVault} from "../HoneyVault.sol";
-import {HoneyVaultFactory} from "../HoneyVaultFactory.sol";
+import {PraxosVault} from "../PraxosVault.sol";
+import {PraxosFactory} from "../PraxosFactory.sol";
 import {MockERC3643} from "../mocks/MockERC3643.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -17,8 +17,8 @@ contract MockERC20 is ERC20 {
     }
 }
 
-contract HoneyVaultTest is Test {
-    HoneyVaultFactory factory;
+contract PraxosTest is Test {
+    PraxosFactory factory;
     MockERC20 baseAsset;
     MockERC3643 bond1;
     MockERC3643 realEstate;
@@ -29,7 +29,7 @@ contract HoneyVaultTest is Test {
 
     function setUp() public {
         // Deploy factory
-        factory = new HoneyVaultFactory();
+        factory = new PraxosFactory();
 
         // Deploy base asset (stablecoin)
         baseAsset = new MockERC20("USD Stablecoin", "USDS");
@@ -75,7 +75,7 @@ contract HoneyVaultTest is Test {
         weights[0] = 6000; // 60%
         weights[1] = 4000; // 40%
 
-        HoneyVaultFactory.VaultConfig memory config = HoneyVaultFactory.VaultConfig({
+        PraxosFactory.VaultConfig memory config = PraxosFactory.VaultConfig({
             baseAsset: address(baseAsset),
             name: "Conservative Vault",
             symbol: "CONS-VAULT",
@@ -98,7 +98,7 @@ contract HoneyVaultTest is Test {
         uint256[] memory weights = new uint256[](1);
         weights[0] = 10000;
 
-        HoneyVaultFactory.VaultConfig memory config = HoneyVaultFactory.VaultConfig({
+        PraxosFactory.VaultConfig memory config = PraxosFactory.VaultConfig({
             baseAsset: address(baseAsset),
             name: "Test Vault",
             symbol: "TEST",
@@ -110,7 +110,7 @@ contract HoneyVaultTest is Test {
         });
 
         address vaultAddr = factory.createVault(config);
-        HoneyVault vault = HoneyVault(vaultAddr);
+        PraxosVault vault = PraxosVault(vaultAddr);
         
         // The vault is owned by the factory, which is owned by this test contract
         // So we can use the factory to transfer ownership, or just use the factory as owner
@@ -133,7 +133,7 @@ contract HoneyVaultTest is Test {
         uint256[] memory weights1 = new uint256[](1);
         weights1[0] = 10000;
 
-        HoneyVaultFactory.VaultConfig memory config1 = HoneyVaultFactory.VaultConfig({
+        PraxosFactory.VaultConfig memory config1 = PraxosFactory.VaultConfig({
             baseAsset: address(baseAsset),
             name: "Vault 1",
             symbol: "V1",
@@ -152,7 +152,7 @@ contract HoneyVaultTest is Test {
         uint256[] memory weights2 = new uint256[](1);
         weights2[0] = 10000;
 
-        HoneyVaultFactory.VaultConfig memory config2 = HoneyVaultFactory.VaultConfig({
+        PraxosFactory.VaultConfig memory config2 = PraxosFactory.VaultConfig({
             baseAsset: address(baseAsset),
             name: "Vault 2",
             symbol: "V2",

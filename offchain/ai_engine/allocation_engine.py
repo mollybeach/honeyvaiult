@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-HoneyVaiult AI Allocation Engine
+Praxos AI Allocation Engine
 Constructs optimal ERC-4626 vault strategies from risk signatures
 """
 

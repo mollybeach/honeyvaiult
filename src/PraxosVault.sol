@@ -9,11 +9,11 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
- * @title HoneyVault
+ * @title Praxos
  * @notice ERC-4626 vault that holds multiple ERC-3643 RWA tokens
  * @dev Each vault represents a "honey cell" with diversified RWA exposure
  */
-contract HoneyVault is ERC4626, ReentrancyGuard, Ownable {
+contract PraxosVault is ERC4626, ReentrancyGuard, Ownable {
     struct AssetAllocation {
         address asset; // ERC-3643 token address
         uint256 weight; // Allocation weight in basis points (10000 = 100%)

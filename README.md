@@ -1,12 +1,12 @@
-# HoneyVaiult
+# Praxos
 
 **AI-Generated ERC-4626 Vaults Built From ERC-3643 Real-World Assets**
 
 ## Overview
 
-HoneyVaiult is a vault-generation engine that turns regulated financial products (RWAs) issued by institutions on Rayls private nodes into AI-assembled ERC-4626 vaults.
+Praxos is a vault-generation engine that turns regulated financial products (RWAs) issued by institutions on Rayls private nodes into AI-assembled ERC-4626 vaults.
 
-Each institution (Bank A, Bank B, Bank C, etc.) operates a private Rayls node and issues ERC-3643-compliant RWA tokens (bonds, real-estate funds, startup funds, etc.). HoneyVaiult analyzes these RWAs, simulates risk profiles, and passes the results into an AI allocation engine that constructs ERC-4626 vault strategies.
+Each institution (Bank A, Bank B, Bank C, etc.) operates a private Rayls node and issues ERC-3643-compliant RWA tokens (bonds, real-estate funds, startup funds, etc.). Praxos analyzes these RWAs, simulates risk profiles, and passes the results into an AI allocation engine that constructs ERC-4626 vault strategies.
 
 These vaults act like "honey cells" in a honeycomb — modular financial building blocks that users can choose from depending on risk, duration, and diversification.
 
@@ -39,7 +39,7 @@ Users want:
 - clear risk categories
 - automated portfolio construction
 
-**HoneyVaiult satisfies all three.**
+**Praxos satisfies all three.**
 
 ## Architecture
 
@@ -63,9 +63,9 @@ flowchart TD
 
     S --> AI[AI Allocation Engine<br>Strategy Construction]
 
-    AI --> VGen[HoneyVaiult Vault Generator<br>ERC-4626 Smart Contracts]
+    AI --> VGen[Praxos Vault Generator<br>ERC-4626 Smart Contracts]
 
-    VGen --> HV[HoneyVaiult Structured Vaults<br>User-Selectable Products]
+    VGen --> HV[Praxos Structured Vaults<br>User-Selectable Products]
 
     HV --> U[Users Deposit<br>Diversified Exposure]
 ```
@@ -86,7 +86,7 @@ Each product includes identity gating, transfer restrictions, and compliance enf
 
 ### 2. Simulation Layer
 
-HoneyVaiult models each ERC-3643 product by simulating:
+Praxos models each ERC-3643 product by simulating:
 
 - yield curves
 - credit/default risk
@@ -121,7 +121,7 @@ These vaults are:
 - dynamically generated
 - optimized for diversification
 
-### 5. HoneyVaiult User Interface
+### 5. Praxos User Interface
 
 Users see the vaults created by the AI, such as:
 
@@ -166,18 +166,18 @@ See [SETUP.md](./SETUP.md) for detailed setup instructions.
 ## Project Structure
 
 ```
-honeyvaiult/
+praxos/
 ├── src/
 │   ├── interfaces/
 │   │   └── IERC3643.sol          # ERC-3643 RWA interface
 │   ├── mocks/
 │   │   └── MockERC3643.sol       # Mock RWA tokens for testing
-│   ├── HoneyVault.sol             # ERC-4626 vault implementation
-│   └── HoneyVaultFactory.sol     # Vault factory contract
+│   ├── Praxos.sol             # ERC-4626 vault implementation
+│   └── PraxosFactory.sol     # Vault factory contract
 ├── script/
 │   └── Deploy.s.sol              # Deployment script
 ├── src/test/
-│   └── HoneyVault.t.sol         # Foundry tests
+│   └── Praxos.t.sol         # Foundry tests
 ├── offchain/
 │   ├── simulation/
 │   │   └── risk_model.py         # Risk simulation layer
@@ -198,8 +198,8 @@ honeyvaiult/
 
 ### Smart Contracts
 
-- **`HoneyVault.sol`**: ERC-4626 compliant vault that holds multiple ERC-3643 RWA tokens
-- **`HoneyVaultFactory.sol`**: Factory contract for deploying vaults from AI-generated strategies
+- **`Praxos.sol`**: ERC-4626 compliant vault that holds multiple ERC-3643 RWA tokens
+- **`PraxosFactory.sol`**: Factory contract for deploying vaults from AI-generated strategies
 - **`MockERC3643.sol`**: Mock implementation of ERC-3643 for testing and demos
 
 ### Off-Chain Components
@@ -237,7 +237,7 @@ python vault_generator.py
 
 ## Rayls Integration
 
-HoneyVaiult is built for the **Rayls ecosystem**:
+Praxos is built for the **Rayls ecosystem**:
 
 - **Chain**: Rayls Public Chain (EVM compatible)
 - **Devnet**: `https://devnet-rpc.rayls.com` (Chain ID: 123123)
