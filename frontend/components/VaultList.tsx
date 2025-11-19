@@ -43,27 +43,28 @@ export function VaultList({ factoryAddress }: VaultListProps) {
 
   if (!factoryAddress) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-        <p className="text-gray-600">Factory not deployed. Please deploy contracts first.</p>
+      <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-lg rounded-2xl border border-purple-500/20 shadow-2xl p-8 text-center">
+        <p className="text-purple-300">Factory not deployed. Please deploy contracts first.</p>
       </div>
     );
   }
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-        <p className="text-gray-600">Loading vaults...</p>
+      <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-lg rounded-2xl border border-purple-500/20 shadow-2xl p-8 text-center">
+        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500 mb-4"></div>
+        <p className="text-purple-300">Loading vaults...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-        <p className="text-red-500 mb-4">{error}</p>
+      <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-lg rounded-2xl border border-red-500/30 shadow-2xl p-8 text-center">
+        <p className="text-red-400 mb-4">{error}</p>
         <button
           onClick={fetchVaults}
-          className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+          className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-lg font-semibold transition-all"
         >
           Retry
         </button>
@@ -73,8 +74,8 @@ export function VaultList({ factoryAddress }: VaultListProps) {
 
   if (vaults.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-        <p className="text-gray-600">No vaults available yet. Deploy some vaults first!</p>
+      <div className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-lg rounded-2xl border border-purple-500/20 shadow-2xl p-8 text-center">
+        <p className="text-purple-300">No vaults available yet. Deploy some vaults first!</p>
       </div>
     );
   }
