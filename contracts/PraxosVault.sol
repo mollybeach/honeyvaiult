@@ -176,7 +176,7 @@ contract PraxosVault is ERC4626, ReentrancyGuard, Ownable {
      * @notice Internal function to allocate deposited assets to RWA tokens
      * @dev Distributes assets according to allocation weights
      */
-    function _allocateAssets() internal {
+    function _allocateAssets() internal view {
         if (allocations.length == 0) return;
         
         uint256 availableAssets = IERC20(asset()).balanceOf(address(this));
