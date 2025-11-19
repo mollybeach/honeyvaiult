@@ -6,7 +6,7 @@
     "scripts": {
         "compile": "hardhat compile",
         "test": "hardhat test",
-        "deploy": "hardhat run scripts/deploy.js --network rayls_devnet",
+        "deploy": "hardhat run scripts/deploy.mjs --network rayls_devnet",
         "node": "hardhat node",
         "clean": "hardhat clean"
     },
@@ -26,6 +26,7 @@
         "hardhat": "^2.22.0"
     },
     "dependencies": {
-        "dotenv": "^16.4.5"
+        "dotenv": "^16.4.5",
+        "chalk": "^4.1.2"
     }
 }
