@@ -34,6 +34,11 @@ import {
     logDeploymentsHistory
 } from './logs/data/data_logger.mjs';
 
+// -------------------- Environment Variable Updater --------------------
+import {
+    updateEnvAddresses
+} from './environment/envUpdater.mjs';
+
 /**
  * Deploy Praxos Smart Contracts
  * 
@@ -389,6 +394,26 @@ async function main() {
     console.log("");
 
     printSuccess("Complete Praxos Vault System deployed successfully!");
+
+    // ==================== STEP 7: Update Environment Variables ====================
+    printStepHeader("7️⃣ Updating Environment Variables");
+
+    const envAddresses = {
+        PRAXOS_FACTORY_ADDRESS: factoryAddress,
+        MOCK_USDC_ADDRESS: usdcAddress,
+        MOCK_ERC3643_CORPORATE_BOND_ALPHA_ADDRESS: bondAddress,
+        MOCK_ERC3643_REAL_ESTATE_BETA_ADDRESS: realEstateAddress,
+        MOCK_ERC3643_STARTUP_FUND_GAMMA_ADDRESS: startupAddress,
+        PRAXOS_VAULT_ADDRESS: vaultAddress,
+    };
+
+    try {
+        updateEnvAddresses(envAddresses, false); // Update .env only, not .env.example
+        console.log("");
+    } catch (error) {
+        console.warn("⚠️ Failed to update environment variables:", error.message);
+        console.log("");
+    }
 
     return deploymentResults;
 }
