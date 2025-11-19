@@ -1,7 +1,9 @@
 //path: scripts/deploy.mjs
-import {
-    network
-} from "hardhat";
+import hre from "hardhat";
+const {
+    network,
+    ethers
+} = hre;
 import fs from "fs";
 import path from "path";
 import {
@@ -48,10 +50,10 @@ const __filename = fileURLToPath(
 const __dirname = path.dirname(__filename);
 
 async function main() {
-    // Get ethers from network
+    // Get ethers from hardhat runtime environment
     const {
         ethers
-    } = await network.connect();
+    } = hre;
 
     // Configuration
     const CONFIG = {
@@ -79,7 +81,7 @@ async function main() {
     const [deployer] = await ethers.getSigners();
 
     // Get network info
-    const networkName = await network.name;
+    const networkName = network.name;
     const chainId = (await ethers.provider.getNetwork()).chainId;
     printInfo(`📡 Deploying to network: ${networkName} (chainId: ${chainId})`);
 

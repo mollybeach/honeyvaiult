@@ -20,6 +20,7 @@ module.exports = {
         cache: "./cache",
         artifacts: "./artifacts",
     },
+    defaultNetwork: "hardhat", // Default to local network, use --network rayls_devnet for deployment
     networks: {
         hardhat: {
             chainId: 1337,
