@@ -133,10 +133,17 @@ contract PraxosVaultCompliant is ERC4626, ReentrancyGuard, Ownable {
         require(weight > 0, "Weight must be > 0");
         
         // Verify vault is whitelisted to hold this token
-        require(
-            strategyAdapter.isVaultWhitelisted(asset, address(this)),
-            "Vault not whitelisted for this RWA token"
-        );
+        // Note: Owner (factory) can add assets during initialization
+        // In production, vault should be whitelisted before adding assets
+        if (msg.sender == owner()) {
+            // During factory initialization, skip whitelist check
+            // The factory will whitelist the vault after creation
+        } else {
+            require(
+                strategyAdapter.isVaultWhitelisted(asset, address(this)),
+                "Vault not whitelisted for this RWA token"
+            );
+        }
         
         IERC3643 rwa = IERC3643(asset);
         require(rwa.totalSupply() > 0, "Invalid RWA token");

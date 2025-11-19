@@ -6,6 +6,8 @@
 
 Praxos is a complete system for tokenizing Real-World Assets (RWAs), managing them in yield-bearing vaults, and providing personalized vault suggestions to users via an AI agent.
 
+The system supports both **standard ERC-4626 vaults** and **compliant RWA Index Vaults** that bridge ERC-4626 and ERC-3643 standards, enabling compliant investment products with full identity management, price oracles, and dividend distribution.
+
 The system flow: Financial institutions (Bank A, B, C, etc.) issue financial products (bonds, real-estate funds, startup funds) on private Rayls nodes. These products are tokenized into ERC-3643 compliant tokens via a Tokenization Engine. The Praxos AI Engine then analyzes these tokenized RWAs, performs risk analysis and allocation optimization, and creates diversified ERC-4626 yield-bearing vaults. Finally, the Praxos AI Agent provides personalized vault suggestions to users based on their timeframe, risk tolerance, and investment amount.
 
 These vaults act like "honey cells" in a honeycomb — modular financial building blocks that users can choose from depending on risk, duration, and diversification.
@@ -44,6 +46,23 @@ Users want:
 ## Architecture
 
 For a detailed system flowchart, see [docs/PraxosFlowchart.md](./docs/PraxosFlowchart.md).
+
+### Vault Architecture Options
+
+Praxos supports two vault architectures:
+
+1. **Standard Vaults** (`PraxosVault`): Simple ERC-4626 vaults for non-compliant or permissionless RWAs
+2. **Compliant Vaults** (`PraxosVaultCompliant`): Full RWA compliance architecture with:
+   - ONCHAINID identity management
+   - Price oracle integration
+   - Dividend harvesting and distribution
+   - Compliant swap mechanisms
+   - Rewards module support
+
+For detailed information on the compliant architecture, see:
+- [docs/COMPLIANT_VAULT_ARCHITECTURE.md](./docs/COMPLIANT_VAULT_ARCHITECTURE.md) - Complete architecture explanation
+- [docs/IMPLEMENTATION_GUIDE.md](./docs/IMPLEMENTATION_GUIDE.md) - Step-by-step deployment guide
+- [docs/VAULT_STORAGE_EXPLANATION.md](./docs/VAULT_STORAGE_EXPLANATION.md) - Vault data storage patterns
 
 ```mermaid
 flowchart TD
@@ -271,13 +290,24 @@ See [docs/SETUP.md](./docs/SETUP.md) for detailed setup instructions.
 praxos/
 ├── contracts/
 │   ├── interfaces/
-│   │   └── IERC3643.sol          # ERC-3643 RWA interface
+│   │   ├── IERC3643.sol                    # ERC-3643 RWA token interface
+│   │   ├── ICompliantStrategyAdapter.sol   # Interface for compliance adapter
+│   │   ├── IPriceOracle.sol                # Interface for RWA price oracle
+│   │   ├── IDividendDistributor.sol        # Interface for dividend distribution
+│   │   └── IIdentity.sol                   # Interface for ONCHAINID identity
 │   ├── mocks/
-│   │   ├── MockERC20.sol         # Mock ERC20 token for testing
-│   │   ├── MockERC3643.sol       # Mock ERC-3643 RWA tokens for testing
-│   │   └── MockUSDC.sol          # Mock USDC for deployment
-│   ├── PraxosVault.sol           # ERC-4626 vault implementation
-│   └── PraxosFactory.sol         # Vault factory contract
+│   │   ├── MockERC20.sol                   # Mock ERC20 token for testing
+│   │   ├── MockERC3643.sol                 # Mock ERC-3643 RWA tokens for testing
+│   │   ├── MockUSDC.sol                    # Mock USDC for deployment
+│   │   ├── CompliantStrategyAdapter.sol    # Mock compliance adapter implementation
+│   │   ├── SimplePriceOracle.sol           # Mock price oracle implementation
+│   │   └── SimpleDividendDistributor.sol  # Mock dividend distributor implementation
+│   ├── PraxosVault.sol                     # ERC-4626 vault implementation (standard)
+│   ├── PraxosVaultCompliant.sol            # ERC-4626 compliant vault with RWA support
+│   ├── PraxosVaultExtended.sol             # Extended vault with APR and metadata
+│   ├── PraxosFactory.sol                   # Vault factory contract (standard)
+│   ├── PraxosFactoryCompliant.sol          # Compliant vault factory with infrastructure
+│   └── RewardsModule.sol                   # Rewards distribution module for dividends
 ├── scripts/
 │   ├── deploy.mjs                # Hardhat deployment script
 │   ├── abi/
@@ -300,14 +330,27 @@ praxos/
 │   │   └── suggestion_engine.py # Praxos AI Agent (personalized suggestions)
 │   ├── vault_generator.py        # Main orchestrator
 │   └── requirements.txt           # Python dependencies
-├── frontend/
+├── praxos-app/                   # Next.js frontend application
+│   ├── app/                      # Next.js app directory
+│   ├── components/               # React components
+│   │   ├── dashboard/            # Dashboard components
+│   │   └── ui/                   # UI component library
+│   ├── lib/                      # Utilities and hooks
+│   │   ├── contracts.ts          # Contract data loading utilities
+│   │   ├── hooks/                 # Wagmi hooks for contract interactions
+│   │   └── data/                  # Contract deployment data (auto-generated)
+│   └── package.json              # Frontend dependencies
+├── frontend/                     # Legacy frontend (deprecated)
 │   ├── index.html                # Web interface
 │   └── app.js                    # Frontend logic
 ├── docs/
-│   ├── HACKATHON_RULES.md        # Rayls hackathon rules
-│   ├── PraxosFlowchart.md        # System architecture flowchart
-│   ├── QUICKSTART.md             # Quick start guide
-│   └── SETUP.md                  # Detailed setup guide
+│   ├── HACKATHON_RULES.md              # Rayls hackathon rules
+│   ├── PraxosFlowchart.md              # System architecture flowchart
+│   ├── QUICKSTART.md                   # Quick start guide
+│   ├── SETUP.md                        # Detailed setup guide
+│   ├── COMPLIANT_VAULT_ARCHITECTURE.md # Compliant RWA vault architecture
+│   ├── IMPLEMENTATION_GUIDE.md         # Step-by-step implementation guide
+│   └── VAULT_STORAGE_EXPLANATION.md    # Vault data storage patterns
 ├── abi/                          # Generated contract ABIs (auto-generated)
 ├── deployments/                  # Deployment history logs (auto-generated)
 ├── hardhat.config.js             # Hardhat configuration
@@ -321,11 +364,63 @@ praxos/
 
 ### Smart Contracts
 
-- **`PraxosVault.sol`**: ERC-4626 compliant vault that holds multiple ERC-3643 RWA tokens
-- **`PraxosFactory.sol`**: Factory contract for deploying vaults from AI-generated strategies
+#### Core Vault Contracts
+
+- **`PraxosVault.sol`**: Standard ERC-4626 compliant vault that holds multiple ERC-3643 RWA tokens
+  - Multi-asset allocation support
+  - Weight-based portfolio management
+  - Strategy and risk tier tracking
+  - Owner-controlled asset management
+
+- **`PraxosVaultCompliant.sol`**: Enhanced compliant vault with full RWA architecture
+  - ONCHAINID identity support for compliance
+  - Price oracle integration for NAV calculation
+  - Dividend harvesting (push and pull scenarios)
+  - Auto-compound or rewards module support
+  - Compliant swap integration via strategy adapter
+  - See [docs/COMPLIANT_VAULT_ARCHITECTURE.md](./docs/COMPLIANT_VAULT_ARCHITECTURE.md) for details
+
+- **`PraxosVaultExtended.sol`**: Extended vault with additional metadata storage
+  - APR storage in basis points
+  - Description and metadata URI support
+  - Example of how to extend base vault functionality
+
+#### Factory Contracts
+
+- **`PraxosFactory.sol`**: Standard factory for deploying `PraxosVault` instances
+  - Creates vaults from AI-generated strategies
+  - Validates vault configurations
+  - Tracks all deployed vaults
+
+- **`PraxosFactoryCompliant.sol`**: Factory for deploying compliant vaults
+  - Deploys `PraxosVaultCompliant` with compliance infrastructure
+  - Integrates strategy adapter and price oracle
+  - Supports dividend distributor configuration
+  - Handles vault whitelisting during creation
+
+#### Supporting Contracts
+
+- **`RewardsModule.sol`**: Optional module for distributing raw dividends to vault shareholders
+  - Similar to Synthetix StakingRewards pattern
+  - Users claim rewards based on vault share balance
+  - Used when auto-compounding is disabled
+
+#### Interfaces
+
+- **`IERC3643.sol`**: Interface for ERC-3643 compliant RWA tokens
+- **`ICompliantStrategyAdapter.sol`**: Interface for compliance and whitelisting adapter
+- **`IPriceOracle.sol`**: Interface for RWA token price feeds
+- **`IDividendDistributor.sol`**: Interface for dividend claiming and distribution
+- **`IIdentity.sol`**: Interface for ONCHAINID identity verification
+
+#### Mock Contracts (Testing & Development)
+
 - **`MockERC3643.sol`**: Mock implementation of ERC-3643 for testing and demos
 - **`MockERC20.sol`**: Mock ERC20 token for testing
 - **`MockUSDC.sol`**: Mock USDC token for deployment scripts
+- **`CompliantStrategyAdapter.sol`**: Mock compliance adapter with whitelisting
+- **`SimplePriceOracle.sol`**: Mock price oracle with configurable prices
+- **`SimpleDividendDistributor.sol`**: Mock dividend distributor for testing
 
 ### Off-Chain Components
 
@@ -335,11 +430,24 @@ praxos/
 - **Vault Generator**: Orchestrates the full pipeline from tokenized RWAs to deployable vault configs
 - **Praxos AI Agent**: Provides personalized vault suggestions to users based on timeframe, risk tolerance, and investment amount
 
-### Frontend
+### Frontend (praxos-app)
 
-- Web interface for viewing and interacting with vaults
-- Wallet integration (MetaMask, etc.)
-- Deposit/withdraw functionality
+The frontend is a modern Next.js application with full smart contract integration:
+
+- **Dashboard**: View all available vaults with real-time blockchain data
+- **Wallet Integration**: RainbowKit + Wagmi for multi-wallet support
+- **Deposit/Withdraw**: Full ERC-4626 deposit and withdrawal functionality
+- **USDC Approval Flow**: Automatic two-step approval and deposit process
+- **Real-time Data**: Fetches vault information directly from blockchain
+- **Mock Data Fallback**: Falls back to mock data if contracts aren't deployed
+- **Contract Loading**: Automatically loads contract addresses from deployment data
+
+Key features:
+- Loads vaults from `PraxosFactory` or `PraxosFactoryCompliant`
+- Displays vault strategy, risk tier, APR, and asset allocations
+- Interactive deposit dialogs with amount input
+- Transaction status tracking (pending, success, error)
+- Responsive design with dark theme
 
 ## Development
 
@@ -357,12 +465,56 @@ make test
 # Or: npx hardhat test
 ```
 
+### Deploy Contracts
+
+```bash
+# Deploy to Rayls Devnet
+make deploy
+# Or: npx hardhat run scripts/deploy.mjs --network rayls_devnet
+
+# This will deploy:
+# 1. Infrastructure Contracts:
+#    - CompliantStrategyAdapter (compliance and whitelisting)
+#    - SimplePriceOracle (RWA token price feeds)
+#    - SimpleDividendDistributor (dividend distribution)
+# 2. Factory Contracts:
+#    - PraxosFactory (standard vault factory)
+#    - PraxosFactoryCompliant (compliant vault factory)
+# 3. Base Assets:
+#    - MockUSDC (base asset for vaults)
+# 4. RWA Tokens:
+#    - Corporate Bond Alpha (MockERC3643)
+#    - Real Estate Fund Beta (MockERC3643)
+#    - Startup Fund Gamma (MockERC3643)
+# 5. Demo Vaults:
+#    - Balanced Diversified Vault (standard)
+#    - Compliant Balanced Diversified Vault (compliant)
+# 6. Optional:
+#    - RewardsModule (for dividend distribution)
+
+# After deployment:
+# - Contract addresses saved to .env
+# - Deployment data saved to deployments/
+# - Contract data saved to frontend/lib/data/contracts_data.json
+# - Contract data saved to praxos-app/lib/data/contracts_data.json
+```
+
 ### Generate Vault Strategies
 
 ```bash
 cd offchain
 python vault_generator.py
 ```
+
+### Frontend Development
+
+```bash
+cd praxos-app
+npm install  # or pnpm install
+npm run dev  # Start development server on http://localhost:3000
+```
+
+The frontend automatically loads contract addresses from `praxos-app/lib/data/contracts_data.json`, which is populated by the deploy script.
 
 ## Rayls Integration
 
