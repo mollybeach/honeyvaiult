@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Praxos AI Allocation Engine
-Constructs optimal ERC-4626 vault strategies from risk signatures
+Praxos AI Engine
+Performs risk analysis and constructs optimal ERC-4626 vault strategies from risk signatures
 """
 
 from dataclasses import dataclass
@@ -24,8 +24,8 @@ class VaultStrategy:
     diversification_score: float  # 0-100
 
 
-class AIAllocationEngine:
-    """AI engine that constructs optimal vault strategies"""
+class PraxosAIEngine:
+    """Praxos AI Engine that performs risk analysis and constructs optimal vault strategies"""
     
     # Predefined strategy templates
     STRATEGY_TEMPLATES = {
@@ -339,7 +339,7 @@ if __name__ == "__main__":
         )
     ]
     
-    engine = AIAllocationEngine(simulator)
+    engine = PraxosAIEngine(simulator)
     strategies = engine.generate_vault_strategies(assets)
     
     for strategy in strategies:
