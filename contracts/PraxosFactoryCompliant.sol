@@ -2,6 +2,7 @@
 pragma solidity ^0.8.24;
 
 import {PraxosVaultCompliant} from "./PraxosVaultCompliant.sol";
+import {ICompliantStrategyAdapter} from "./interfaces/ICompliantStrategyAdapter.sol";
 import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
@@ -87,6 +88,10 @@ contract PraxosFactoryCompliant is Ownable {
         vault = address(newVault);
         isVault[vault] = true;
         allVaults.push(vault);
+        
+        // Note: Vault must be whitelisted before adding assets
+        // This is typically done by the deployer before calling createVault
+        // or the factory owner can whitelist vaults through the adapter
         
         // Add assets to vault (factory is still owner at this point)
         for (uint256 i = 0; i < config.assets.length; i++) {
