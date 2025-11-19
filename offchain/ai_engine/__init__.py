@@ -1,4 +1,4 @@
-from .allocation_engine import AIAllocationEngine, VaultStrategy
+from .allocation_engine import PraxosAIEngine, VaultStrategy
 
-__all__ = ["AIAllocationEngine", "VaultStrategy"]
+__all__ = ["PraxosAIEngine", "VaultStrategy"]
 
