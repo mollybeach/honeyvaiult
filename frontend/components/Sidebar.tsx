@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 interface SidebarProps {
   activeSection: string;
@@ -12,8 +13,14 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
     <div className="hidden md:block w-64 bg-slate-900 border-r border-slate-800 h-screen fixed left-0 top-0 overflow-y-auto">
       <div className="p-6 border-b border-slate-800">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-xl">P</span>
+          <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 relative">
+            <Image
+              src="/praxos_favicon.jpeg"
+              alt="Praxos Logo"
+              width={40}
+              height={40}
+              className="object-cover"
+            />
           </div>
           <div>
             <h1 className="text-lg font-bold text-white">Praxos</h1>

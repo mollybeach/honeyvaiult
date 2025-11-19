@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Sidebar } from '@/components/Sidebar';
 import { FindVaultsPanel, type VaultPreferences } from '@/components/FindVaultsPanel';
 import { RecommendedVaultsPanel } from '@/components/RecommendedVaultsPanel';
@@ -81,7 +82,18 @@ export default function Home() {
         {/* Top Bar */}
         <header className="bg-slate-900 border-b border-slate-800 px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold text-white">Dashboard</h1>
+            <div className="flex items-center gap-4">
+              <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0 md:hidden relative">
+                <Image
+                  src="/praxos_favicon.jpeg"
+                  alt="Praxos Logo"
+                  width={32}
+                  height={32}
+                  className="object-cover"
+                />
+              </div>
+              <h1 className="text-xl font-bold text-white">Dashboard</h1>
+            </div>
             <div className="flex items-center gap-4">
               <div className="text-sm text-slate-400">
                 <span className="text-white">0</span> USDgas
