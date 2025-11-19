@@ -8,9 +8,10 @@ import type { VaultInfo } from '@/types';
 
 interface VaultListProps {
   factoryAddress: string;
+  refreshTrigger?: number; // Trigger refresh when this changes
 }
 
-export function VaultList({ factoryAddress }: VaultListProps) {
+export function VaultList({ factoryAddress, refreshTrigger }: VaultListProps) {
   const { provider, address, isConnected } = useWeb3();
   const [vaults, setVaults] = useState<VaultInfo[]>([]);
   const [loading, setLoading] = useState(false);
@@ -39,7 +40,7 @@ export function VaultList({ factoryAddress }: VaultListProps) {
     if (factoryAddress) {
       fetchVaults();
     }
-  }, [provider, factoryAddress, address]);
+  }, [provider, factoryAddress, address, refreshTrigger]);
 
   if (!factoryAddress) {
     return (

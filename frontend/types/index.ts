@@ -28,6 +28,34 @@ export interface VaultInfo {
   };
 }
 
+// New enhanced Vault interface
+export type AssetType = 'bond' | 'reit' | 'fund' | 'commodity' | 'equity' | 'other';
+
+export interface Asset {
+  name: string;
+  type: AssetType;
+  provider: string;
+  country: string;
+  rating: string;
+  description: string;
+  address?: string; // Optional: on-chain address if available
+}
+
+export interface Vault {
+  id: string;                    // Unique identifier (can be vault address)
+  name: string;                  // Vault name (displayed as heading)
+  description: string;           // Vault description
+  apr: number;                   // Annual Percentage Rate (displayed prominently)
+  matchPercentage: number;       // Match percentage (0-100, shown with green dot)
+  isNew?: boolean;               // Optional flag to show "New" badge
+  assets: Asset[];              // Array of underlying assets
+  // Additional blockchain data
+  address?: string;              // On-chain vault address
+  totalAssets?: bigint;          // Total assets in vault
+  userBalance?: bigint;          // User's balance in vault
+  riskTier?: number;             // Risk tier (1-5)
+}
+
 export interface DeploymentContract {
   name: string;
   address: string;

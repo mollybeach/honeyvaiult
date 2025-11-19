@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import { WalletButton } from '@/components/WalletButton';
 import { VaultList } from '@/components/VaultList';
+import { CreateVaultForm } from '@/components/CreateVaultForm';
 import { DEFAULT_FACTORY_ADDRESS } from '@/lib/config';
 
 export default function Home() {
   const [factoryAddress, setFactoryAddress] = useState(DEFAULT_FACTORY_ADDRESS);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex flex-col">
@@ -66,10 +68,22 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Create Vault Section */}
+          <section id="create" className="mb-12">
+            <h3 className="text-3xl font-bold text-white mb-6">Create New Vault</h3>
+            <CreateVaultForm 
+              factoryAddress={factoryAddress}
+              onVaultCreated={() => {
+                // Trigger refresh of vault list
+                setRefreshTrigger(prev => prev + 1);
+              }}
+            />
+          </section>
+
           {/* Vaults Section */}
           <section id="vaults">
             <h3 className="text-3xl font-bold text-white mb-6">Available Vaults</h3>
-            <VaultList factoryAddress={factoryAddress} />
+            <VaultList factoryAddress={factoryAddress} refreshTrigger={refreshTrigger} />
           </section>
         </div>
       </main>
