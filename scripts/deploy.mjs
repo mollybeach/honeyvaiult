@@ -270,6 +270,26 @@ async function main() {
     // ==================== STEP 5: Log Deployment Data ====================
     printStepHeader("5️⃣ Logging Deployment Data");
 
+    // Get PraxosVault factory for ABI extraction (if not already available)
+    const PraxosVaultFactory = await ethers.getContractFactory("PraxosVault", deployer);
+
+    // Extract ABIs - ethers v6 uses interface.formatJson() or interface.fragments
+    const getAbi = (contractFactory) => {
+        try {
+            // In ethers v6, interface.formatJson() returns the ABI as JSON string
+            // We can also use interface.fragments to get the fragments
+            return JSON.parse(contractFactory.interface.formatJson());
+        } catch (error) {
+            // Fallback: try to get from fragments
+            try {
+                return contractFactory.interface.fragments.map(f => f.format("json")).map(j => JSON.parse(j));
+            } catch (e) {
+                console.warn(`⚠️ Could not extract ABI: ${error.message}`);
+                return [];
+            }
+        }
+    };
+
     const deploymentData = {
         deploymentId: Date.now().toString(),
         deployedBy: deployer.address,
@@ -283,31 +303,37 @@ async function main() {
                 name: 'PraxosFactory',
                 address: factoryAddress,
                 explorerUrl: `${explorerUrl}/address/${factoryAddress}`,
+                abiRaw: getAbi(PraxosFactory),
             },
             MockUSDC: {
                 name: 'MockUSDC',
                 address: usdcAddress,
                 explorerUrl: `${explorerUrl}/address/${usdcAddress}`,
+                abiRaw: getAbi(MockUSDC),
             },
             CorporateBondAlpha: {
                 name: 'Corporate Bond Alpha',
                 address: bondAddress,
                 explorerUrl: `${explorerUrl}/address/${bondAddress}`,
+                abiRaw: getAbi(MockERC3643),
             },
             RealEstateFundBeta: {
                 name: 'Real Estate Fund Beta',
                 address: realEstateAddress,
                 explorerUrl: `${explorerUrl}/address/${realEstateAddress}`,
+                abiRaw: getAbi(MockERC3643),
             },
             StartupFundGamma: {
                 name: 'Startup Fund Gamma',
                 address: startupAddress,
                 explorerUrl: `${explorerUrl}/address/${startupAddress}`,
+                abiRaw: getAbi(MockERC3643),
             },
             DemoVault: {
                 name: CONFIG.vaultName,
                 address: vaultAddress,
                 explorerUrl: `${explorerUrl}/address/${vaultAddress}`,
+                abiRaw: getAbi(PraxosVaultFactory),
             },
         },
         configuration: {
