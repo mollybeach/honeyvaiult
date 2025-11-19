@@ -44,3 +44,5 @@ ENV/
 out/
 lib/
 forge-std/
+
+praxos-app/
